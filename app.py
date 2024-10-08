@@ -7,7 +7,7 @@ from models import User
 from database import initialize_db
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Substitua por uma chave secreta real
+app.secret_key = 'your_secret_key' 
 
 # Inicializar Flask-Login
 login_manager = LoginManager()
@@ -50,18 +50,16 @@ def logout():
     flash('Você saiu com sucesso.', 'success')
     return redirect(url_for('login'))
 
-# Rota da Área Administrativa
+
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
-    # Opcional: Verificar se o usuário é admin
-    # Por simplicidade, permitiremos que qualquer usuário logado acesse a área administrativa
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         drive_link = request.form['drive_link']
         
-        # Inserir o novo usuário
         success = User.create(username, password, drive_link)
         if success:
             flash(f'Usuário {username} adicionado com sucesso!', 'success')

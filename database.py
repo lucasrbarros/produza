@@ -10,7 +10,7 @@ def get_db_connection():
 def initialize_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Cria a tabela de usuários se não existir
+    
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             username TEXT PRIMARY KEY,

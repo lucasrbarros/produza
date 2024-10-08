@@ -5,7 +5,7 @@ from database import get_db_connection, initialize_db
 import sys
 
 def add_user(username, password, drive_link):
-    initialize_db()  # Certifica-se de que o banco de dados está inicializado
+    initialize_db() 
     conn = get_db_connection()
     try:
         conn.execute('INSERT INTO users (username, password, drive_link) VALUES (?, ?, ?)',

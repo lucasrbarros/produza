@@ -5,7 +5,7 @@ from database import get_db_connection
 
 class User(UserMixin):
     def __init__(self, username, password, drive_link):
-        self.id = username  # Usando 'username' como ID
+        self.id = username  
         self.password = password
         self.drive_link = drive_link
 

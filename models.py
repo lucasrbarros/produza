@@ -1,9 +1,11 @@
+# models.py
+
 from flask_login import UserMixin
 from database import get_db_connection
 
 class User(UserMixin):
     def __init__(self, username, password, drive_link):
-        self.id = username
+        self.id = username  # Usando 'username' como ID
         self.password = password
         self.drive_link = drive_link
 
@@ -15,3 +17,16 @@ class User(UserMixin):
         if user_row:
             return User(user_row['username'], user_row['password'], user_row['drive_link'])
         return None
+
+    @staticmethod
+    def create(username, password, drive_link):
+        conn = get_db_connection()
+        try:
+            conn.execute('INSERT INTO users (username, password, drive_link) VALUES (?, ?, ?)',
+                         (username, password, drive_link))
+            conn.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False
+        finally:
+            conn.close()

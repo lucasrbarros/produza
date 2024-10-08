@@ -1,0 +1,45 @@
+<!-- templates/admin.html -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Administrativa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Área Administrativa</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('admin') }}">
+            <div class="form-group">
+                <label for="username">Usuário:</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label for="drive_link">Link para Fotos:</label>
+                <input type="text" name="drive_link" id="drive_link" required>
+            </div>
+            <button type="submit">Adicionar Usuário</button>
+        </form>
+        
+        <br>
+        <a href="{{ url_for('dashboard') }}" class="btn-link">Voltar para o Dashboard</a>
+        <br><br>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+    </div>
+</body>
+</html>

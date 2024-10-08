@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for
+# app.py
+
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from auth import authenticate_user
 from models import User
 from database import initialize_db
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = 'your_secret_key'  # Substitua por uma chave secreta real
 
 # Inicializar Flask-Login
 login_manager = LoginManager()
@@ -20,7 +22,7 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -30,9 +32,10 @@ def login():
         user = authenticate_user(username, password)
         if user:
             login_user(user)
+            flash('Login realizado com sucesso!', 'success')
             return redirect(url_for('dashboard'))
         else:
-            return 'Login inválido'
+            flash('Login inválido. Verifique seu usuário e senha.', 'danger')
     return render_template('login.html')
 
 @app.route('/dashboard')
@@ -44,7 +47,29 @@ def dashboard():
 @login_required
 def logout():
     logout_user()
+    flash('Você saiu com sucesso.', 'success')
     return redirect(url_for('login'))
+
+# Rota da Área Administrativa
+@app.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():
+    # Opcional: Verificar se o usuário é admin
+    # Por simplicidade, permitiremos que qualquer usuário logado acesse a área administrativa
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        drive_link = request.form['drive_link']
+        
+        # Inserir o novo usuário
+        success = User.create(username, password, drive_link)
+        if success:
+            flash(f'Usuário {username} adicionado com sucesso!', 'success')
+            return redirect(url_for('admin'))
+        else:
+            flash(f'Erro: O usuário {username} já existe.', 'danger')
+    
+    return render_template('admin.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
